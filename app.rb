@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'mini_magick'
 require 'open-uri'
 require 'fileutils'
 
-require 'sinatra'
-require 'fileutils'
 require_relative './lib/meme_generator'
 require_relative './lib/image_processing'
 
@@ -27,16 +27,16 @@ post '/generate' do
 
   processor = ImageProcessing.new
   downloaded_path = processor.save_imagine(image_url)
-  halt 422, "Could not download image" if downloaded_path.nil?
+  halt 422, 'Could not download image' if downloaded_path.nil?
 
   output_filename = "meme_#{Time.now.to_i}_#{rand(1..100_000)}.jpg"
   output_path = File.join('public/memes', output_filename)
 
   generator = MemeGenerator.new(downloaded_path)
   result = generator.generate(text_meme, output_path)
-  halt 422, "Could not generate meme" if result.nil?
+  halt 422, 'Could not generate meme' if result.nil?
 
-#   FileUtils.rm_f(downloaded_path)
+  FileUtils.rm_f(downloaded_path)
 
   redirect "/memes/#{output_filename}"
 end
