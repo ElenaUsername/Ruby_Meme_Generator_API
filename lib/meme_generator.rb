@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'mini_magick'
+require 'input_validator'
 
 class MemeGenerator
   def initialize(image_path)
@@ -8,7 +9,8 @@ class MemeGenerator
   end
 
   def generate(text_meme, output_path)
-    return nil if text_meme.nil? || @image_path.nil?
+    return nil if InputValidator.validate_text(text_meme) || InputValidator.validate_image_url(@image_path)
+    # return nil if text_meme.nil? || @image_path.nil?
 
     image = MiniMagick::Image.open(@image_path)
 
