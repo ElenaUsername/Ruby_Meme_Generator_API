@@ -96,3 +96,20 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 end
+
+ENV['RACK_ENV'] = 'test'
+
+require 'rspec'
+require 'rack/test'
+require_relative '../app'
+
+module RSpecMixin
+  include Rack::Test::Methods
+  def app
+    Sinatra::Application
+  end
+end
+
+RSpec.configure do |config|
+  config.include RSpecMixin
+end
