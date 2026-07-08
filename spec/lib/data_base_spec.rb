@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './lib/data_base'
 
 def test_sign_up(name, password, result_expected)
@@ -12,7 +14,7 @@ RSpec.describe DataBase do
   before(:each) do
     DataBase.setup_db
     db = SQLite3::Database.open(DataBase::DB_FILE)
-    db.execute("DELETE FROM users")
+    db.execute('DELETE FROM users')
     db.close
   end
 

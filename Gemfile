@@ -8,8 +8,8 @@ gem 'mini_magick'
 
 gem 'rspec', '>= 3.13.2'
 
-gem 'sqlite3'
 gem 'bcrypt', '~> 3.1.7'
+gem 'sqlite3'
 
 gem 'rubocop'
 gem 'rubocop-rspec', require: false
