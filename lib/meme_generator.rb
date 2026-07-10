@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'mini_magick'
-require 'input_validator'
+require_relative 'input_validator'
 
 class MemeGenerator
   def initialize(image_path)

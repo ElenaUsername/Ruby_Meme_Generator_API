@@ -11,19 +11,23 @@ def test_login(name, password, result_expected)
 end
 
 RSpec.describe DataBase do
-  before(:each) do
-    DataBase.setup_db
-    db = SQLite3::Database.open(DataBase::DB_FILE)
-    db.execute('DELETE FROM users')
-    db.close
-  end
 
   let(:name) { 'test_user' }
   let(:password) { 'secure_password' }
   let(:wrong_name) { 'wrong_user' }
   let(:wrong_password) { 'wrong_password' }
+  let(:data_file) { File.expand_path('../fixtures/database_for_tests.db', __dir__) }
+  
+  before(:each) do
+    DataBase.db(data_file)
+    DataBase.db.execute('DELETE FROM users')
+  end
+ 
+  after(:suite) do
+    DataBase.close_db
+  end
 
-  describe 'sign_up' do
+  context 'sign_up' do
     it 'creates a new user with a hashed password' do
       test_sign_up(name, password, true)
     end
@@ -34,7 +38,7 @@ RSpec.describe DataBase do
     end
   end
 
-  describe 'login' do
+  context 'login' do
     it 'authenticates a user with correct credentials' do
       DataBase.sign_up(name, password)
       test_login(name, password, true)
@@ -51,7 +55,7 @@ RSpec.describe DataBase do
     end
   end
 
-  describe 'verify_user_exist' do
+  context 'verify_user_exist' do
     it 'returns true for existing user' do
       DataBase.sign_up(name, password)
       expect(DataBase.verify_user_exist(name)).to be true
@@ -62,9 +66,9 @@ RSpec.describe DataBase do
     end
   end
 
-  describe 'hash_theuser_name' do
+  context 'hash_password' do
     it 'returns a hashed password' do
-      hashed_password = DataBase.hash_theuser_name(name, password)
+      hashed_password = DataBase.hash_password(password)
       expect(BCrypt::Password.new(hashed_password)).to eq(password)
     end
   end

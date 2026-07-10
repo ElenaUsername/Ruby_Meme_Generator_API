@@ -43,6 +43,7 @@ build-iPhoneSimulator/
 /vendor/bundle
 /lib/bundler/man/
 /spec/data_base
+/spec/fixtures/database_for_tests.db
 
 # for a library or gem, you might want to ignore these files since the code is
 # intended to run in multiple environments; otherwise, check them in:
