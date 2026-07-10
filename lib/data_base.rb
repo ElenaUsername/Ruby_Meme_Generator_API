@@ -54,15 +54,6 @@ class DataBase
     result = db.get_first_row('SELECT id FROM users WHERE name = ?', [name])
     !result.nil?
   end
+
+  
 end
-
-# if __FILE__ == $0
-#   DataBase.sign_up("alice", "s3cret-pass")
-
-#   puts DataBase.login("alice", "s3cret-pass")   # => true
-#   puts DataBase.login("alice", "wrong-pass")    # => false
-#   puts DataBase.verify_user_exist("alice")      # => true
-#   puts DataBase.verify_user_exist("bob")        # => false
-
-#   DataBase.close_db
-# end
