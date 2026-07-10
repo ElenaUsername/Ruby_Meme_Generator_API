@@ -11,18 +11,17 @@ def test_login(name, password, result_expected)
 end
 
 RSpec.describe DataBase do
-
   let(:name) { 'test_user' }
   let(:password) { 'secure_password' }
   let(:wrong_name) { 'wrong_user' }
   let(:wrong_password) { 'wrong_password' }
   let(:data_file) { File.expand_path('../fixtures/database_for_tests.db', __dir__) }
-  
+
   before(:each) do
     DataBase.db(data_file)
     DataBase.db.execute('DELETE FROM users')
   end
- 
+
   after(:suite) do
     DataBase.close_db
   end

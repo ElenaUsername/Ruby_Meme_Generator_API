@@ -13,9 +13,7 @@ require_relative './lib/data_base'
 
 enable :sessions
 raw_secret = ENV['SESSION_SECRET']
-if raw_secret.nil? || raw_secret.bytesize < 64
-  raw_secret = SecureRandom.hex(64)
-end
+raw_secret = SecureRandom.hex(64) if raw_secret.nil? || raw_secret.bytesize < 64
 set :session_secret, raw_secret
 
 FileUtils.mkdir_p('tmp')
@@ -38,7 +36,7 @@ post '/auth' do
   name = params[:name].to_s.strip
   password = params[:password].to_s
   action = params[:action]
-  
+
   if name.empty? || password.empty?
     status 400
     return 'Name and password cannot be blank'
@@ -73,9 +71,7 @@ post '/auth' do
 end
 
 get '/generate' do
-  unless session[:name]
-    redirect '/'
-  end
+  redirect '/' unless session[:name]
 
   <<~HTML
     <h2>Meme Generator</h2>
@@ -94,9 +90,7 @@ get '/logout' do
 end
 
 post '/generate' do
-  unless session[:name]
-    redirect '/'
-  end
+  redirect '/' unless session[:name]
   image_url = params[:image_url]
   text_meme = params[:text_meme]
 

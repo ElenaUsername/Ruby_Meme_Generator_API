@@ -4,11 +4,8 @@ require 'sqlite3'
 require 'bcrypt'
 
 class DataBase
-
   def self.db(data_file = nil)
-    if data_file.nil?
-      data_file = File.expand_path('../spec/data_base/data.db', __dir__)
-    end
+    data_file = File.expand_path('../spec/data_base/data.db', __dir__) if data_file.nil?
     @db ||= begin
       connection = SQLite3::Database.open(data_file)
       connection.execute <<-SQL
@@ -54,6 +51,4 @@ class DataBase
     result = db.get_first_row('SELECT id FROM users WHERE name = ?', [name])
     !result.nil?
   end
-
-  
 end

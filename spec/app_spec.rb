@@ -12,7 +12,7 @@ RSpec.describe 'App' do
     allow_any_instance_of(MemeGenerator).to receive(:generate).and_return('ok')
     allow(FileUtils).to receive(:rm_f)
   end
-  
+
   describe 'POST /generate' do
     it 'returns a successful redirect response' do
       post '/generate', { image_url: image_url, text_meme: text_meme }, { 'rack.session' => { name: 'tester' } }
