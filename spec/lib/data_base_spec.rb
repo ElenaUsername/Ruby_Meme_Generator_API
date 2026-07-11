@@ -71,4 +71,16 @@ RSpec.describe DataBase do
       expect(BCrypt::Password.new(hashed_password)).to eq(password)
     end
   end
+
+  context 'take_the_user_token' do
+    it 'returns the token for an existing user' do
+      DataBase.sign_up(name, password)
+      token = DataBase.take_the_user_token(name)
+      expect(token).not_to be_nil
+    end
+
+    it 'returns nil for a non-existing user' do
+      expect(DataBase.take_the_user_token(wrong_name)).to be_nil
+    end
+  end
 end

@@ -12,7 +12,8 @@ class DataBase
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER NOT NULL PRIMARY KEY,
           name TEXT UNIQUE NOT NULL,
-          password_digest TEXT NOT NULL
+          password_digest TEXT NOT NULL,
+          token TEXT
         )
       SQL
       connection
@@ -31,8 +32,16 @@ class DataBase
     end
 
     digest = hash_password(password)
-    db.execute('INSERT INTO users (name, password_digest) VALUES (?, ?)', [name, digest])
+    token_user = SecureRandom.hex(16)
+    db.execute('INSERT INTO users (name, password_digest,token) VALUES (?, ?, ?)', [name, digest, token_user])
     true
+  end
+
+  def self.take_the_user_token(name)
+    row = db.get_first_row('SELECT token FROM users WHERE name = ?', [name])
+    return nil if row.nil?
+
+    row[0]
   end
 
   def self.login(name, password)
