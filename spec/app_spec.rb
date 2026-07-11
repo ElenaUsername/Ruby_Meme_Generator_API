@@ -16,20 +16,20 @@ RSpec.describe 'App' do
 
   describe 'POST /generate' do
     it 'returns a successful redirect response' do
-      token =DataBase.take_the_user_token('tester')
+      token = DataBase.take_the_user_token('tester')
       post '/generate', { image_url: image_url, text_meme: text_meme }, { 'rack.session' => { token: token } }
       expect(last_response.status).to eq(302)
     end
 
     it 'returns 422 if image download fails' do
       allow_any_instance_of(ImageProcessing).to receive(:save_imagine).and_return(nil)
-      token =DataBase.take_the_user_token('tester')
+      token = DataBase.take_the_user_token('tester')
       post '/generate', { image_url: image_url, text_meme: text_meme }, { 'rack.session' => { token: token } }
       expect(last_response.status).to eq(422)
     end
 
     it 'redirects to the generated meme path' do
-      token =DataBase.take_the_user_token('tester')
+      token = DataBase.take_the_user_token('tester')
       post '/generate', { image_url: image_url, text_meme: text_meme }, { 'rack.session' => { token: token } }
       expect(last_response.headers['Location']).to match(%r{/memes/meme_\d+_\d+\.jpg})
     end
