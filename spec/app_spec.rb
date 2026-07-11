@@ -39,37 +39,37 @@ RSpec.describe 'App' do
     it 'redirects to /generate on successful signup' do
       allow(DataBase).to receive(:verify_user_exist).and_return(false)
       allow(DataBase).to receive(:sign_up).and_return(true)
-      post '/auth', name: 'alice', password: 'secret', action: 'signup'
+      post '/sign_up', name: 'alice', password: 'secret', action: 'signup'
       expect(last_response.status).to eq(307)
       expect(last_response.headers['Location']).to end_with('/generate')
     end
 
     it 'returns 409 when signup fails due to duplicate username' do
       allow(DataBase).to receive(:verify_user_exist).and_return(true)
-      post '/auth', name: 'bob', password: 'secret', action: 'signup'
+      post '/sign_up', name: 'bob', password: 'secret', action: 'signup'
       expect(last_response.status).to eq(409)
     end
 
     it 'returns 400 when signup fields are blank' do
-      post '/auth', name: '', password: '', action: 'signup'
+      post '/sign_up', name: '', password: '', action: 'signup'
       expect(last_response.status).to eq(400)
     end
 
     it 'redirects to /generate on successful login' do
       allow(DataBase).to receive(:login).and_return(true)
-      post '/auth', name: 'charlie', password: 'secret', action: 'login'
+      post '/log_in', name: 'charlie', password: 'secret', action: 'login'
       expect(last_response.status).to eq(307)
       expect(last_response.headers['Location']).to end_with('/generate')
     end
 
     it 'returns 401 on failed login' do
       allow(DataBase).to receive(:login).and_return(false)
-      post '/auth', name: 'dave', password: 'wrong', action: 'login'
+      post '/log_in', name: 'dave', password: 'wrong', action: 'login'
       expect(last_response.status).to eq(401)
     end
 
     it 'returns 400 when login fields are blank' do
-      post '/auth', name: '', password: '', action: 'login'
+      post '/log_in', name: '', password: '', action: 'login'
       expect(last_response.status).to eq(400)
     end
 

@@ -20,11 +20,6 @@ class DataBase
     end
   end
 
-  def self.close_db
-    @db&.close
-    @db = nil
-  end
-
   def self.sign_up(name, password)
     if verify_user_exist(name)
       puts "User '#{name}' already exists."
