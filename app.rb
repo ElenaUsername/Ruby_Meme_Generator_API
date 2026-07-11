@@ -50,7 +50,7 @@ post '/auth' do
 
     success = DataBase.sign_up(name, password)
     if success
-      session[:name] = name
+      session[:token] = DataBase.take_the_user_token(name)
       redirect '/generate', 307
     else
       status 500
@@ -58,7 +58,7 @@ post '/auth' do
     end
   elsif action == 'login'
     if DataBase.login(name, password)
-      session[:name] = name
+      session[:token] = DataBase.take_the_user_token(name)
       redirect '/generate', 307
     else
       status 401
@@ -71,7 +71,7 @@ post '/auth' do
 end
 
 get '/generate' do
-  redirect '/' unless session[:name]
+  redirect '/' unless session[:token]
 
   <<~HTML
     <h2>Meme Generator</h2>
@@ -80,7 +80,7 @@ get '/generate' do
       <input type="text" name="text_meme" placeholder="Meme text" required>
       <button type="submit">Generate</button>
     </form>
-    <p>Signed in as #{Rack::Utils.escape_html(session[:name])} — <a href="/logout">Logout</a></p>
+    <p>Signed in as #{Rack::Utils.escape_html(session[:token])} — <a href="/logout">Logout</a></p>
   HTML
 end
 
@@ -90,7 +90,7 @@ get '/logout' do
 end
 
 post '/generate' do
-  redirect '/' unless session[:name]
+  redirect '/' unless session[:token]
   image_url = params[:image_url]
   text_meme = params[:text_meme]
 
