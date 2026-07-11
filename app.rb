@@ -10,6 +10,7 @@ require 'securerandom'
 require_relative './lib/meme_generator'
 require_relative './lib/image_processing'
 require_relative './lib/data_base'
+require_relative './lib/user_input_validator'
 
 enable :sessions
 raw_secret = ENV['SESSION_SECRET']
@@ -61,12 +62,9 @@ end
 post '/log_in' do
   name = params[:name].to_s.strip
   password = params[:password].to_s
-  action = params[:action]
 
-  if name.empty? || password.empty?
-    status 400
-    return 'Name and password cannot be blank'
-  end
+  error = UserInputValidator.new.validate_credentials_input(name, password)
+  halt 400 if error.any?
 
   if DataBase.login(name, password)
       session[:token] = DataBase.take_the_user_token(name)
@@ -81,24 +79,15 @@ end
 post '/sign_up' do
   name = params[:name].to_s.strip
   password = params[:password].to_s
-  action = params[:action]
 
-  if name.empty? || password.empty?
-    status 400
-    return 'Name and password cannot be blank'
-  end
-
-  if DataBase.verify_user_exist(name)
-      status 409
-      return 'User already exists'
-    end
-
-    success = DataBase.sign_up(name, password)
-    if success
+    errors = UserInputValidator.new.validate_credentials_input(name, password)
+    halt 400 if errors.any?
+    
+    if DataBase.sign_up(name, password)
       session[:token] = DataBase.take_the_user_token(name)
       redirect '/generate', 307
     else
-      status 500
+      status 409
       'Sign up failed'
     end
 
